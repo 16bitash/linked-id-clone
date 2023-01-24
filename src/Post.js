@@ -7,10 +7,14 @@ import {
 } from "@mui/material";
 
 import { DeleteOutline as DeleteOutlineIcon } from "@mui/icons-material";
+import { deletePost } from "./services/post";
 
 const Post = (props) => {
   const { body, id } = props;
-  console.log(id);
+
+  const handleDeleteClick = () => {
+    deletePost(id);
+  };
 
   return (
     <div>
@@ -23,7 +27,7 @@ const Post = (props) => {
           <Typography variant="body2">{body}</Typography>
         </CardContent>
         <CardActions>
-          <Button size="small" color="error">
+          <Button size="small" color="error" onClick={handleDeleteClick}>
             <DeleteOutlineIcon />
           </Button>
         </CardActions>

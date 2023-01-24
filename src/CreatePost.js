@@ -1,9 +1,10 @@
 import { Button, TextField } from "@mui/material";
-import { db } from "./firebase";
-import { collection, addDoc } from "firebase/firestore";
 import { useState } from "react";
+import { addPost } from "./services/post";
 
-const CreatePost = () => {
+const CreatePost = (props) => {
+  const { onPostCreate } = props;
+
   const [postInputValue, setPostInputValue] = useState("");
 
   const handleCreatePostClick = async () => {
@@ -12,14 +13,11 @@ const CreatePost = () => {
     }
 
     try {
-      const postsCollection = collection(db, "posts");
-      const body = {
-        body: postInputValue,
-      };
+      const addedPost = await addPost({ body: postInputValue });
+      setPostInputValue("");
+      onPostCreate();
 
-      const docRef = await addDoc(postsCollection, body);
-
-      console.log("Document written with ID: ", docRef.id);
+      console.log("Document written with ID: ", addedPost.id);
     } catch (error) {
       console.error("Error adding document: ", error);
     }
