@@ -1,5 +1,6 @@
 import CreatePost from "../CreatePost";
 import NavBar from "../NavBar";
+import Posts from "../Posts";
 import "./App.css";
 
 function App() {
@@ -7,6 +8,7 @@ function App() {
     <>
       <NavBar />
       <CreatePost />
+      <Posts />
     </>
   );
 }

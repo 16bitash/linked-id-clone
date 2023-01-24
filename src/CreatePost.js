@@ -14,7 +14,7 @@ const CreatePost = () => {
     try {
       const postsCollection = collection(db, "posts");
       const body = {
-        description: postInputValue,
+        body: postInputValue,
       };
 
       const docRef = await addDoc(postsCollection, body);
