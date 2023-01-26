@@ -3,17 +3,19 @@ import {
   Card,
   CardActions,
   CardContent,
+  Tooltip,
   Typography,
 } from "@mui/material";
 
 import { DeleteOutline as DeleteOutlineIcon } from "@mui/icons-material";
-import { deletePost } from "./services/post";
+import { deletePost } from "../../services/firebase/post";
 
 const Post = (props) => {
-  const { body, id } = props;
+  const { body, id, onDeletePost } = props;
 
-  const handleDeleteClick = () => {
-    deletePost(id);
+  const handleDeleteClick = async () => {
+    await deletePost(id);
+    onDeletePost();
   };
 
   return (
@@ -27,9 +29,11 @@ const Post = (props) => {
           <Typography variant="body2">{body}</Typography>
         </CardContent>
         <CardActions>
-          <Button size="small" color="error" onClick={handleDeleteClick}>
-            <DeleteOutlineIcon />
-          </Button>
+          <Tooltip title="Delete">
+            <Button size="small" color="error" onClick={handleDeleteClick}>
+              <DeleteOutlineIcon />
+            </Button>
+          </Tooltip>
         </CardActions>
       </Card>
     </div>

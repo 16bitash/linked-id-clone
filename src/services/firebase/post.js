@@ -5,8 +5,8 @@ import {
   doc,
   getDocs,
 } from "firebase/firestore";
-import { posts as postsCollectionName } from "../constants/firebase-collection";
-import { db } from "../firebase";
+import { posts as postsCollectionName } from "../../shared/constants/firebase-collection";
+import { db } from "./initialize";
 
 const getPostsCollection = () => {
   return collection(db, postsCollectionName);
