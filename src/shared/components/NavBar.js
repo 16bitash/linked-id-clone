@@ -19,6 +19,7 @@ import {
   LinkedIn as LinkedInIcon,
 } from "@mui/icons-material";
 import { Link } from "react-router-dom";
+import { signOut } from "../../services/firebase/auth";
 
 const pages = ["User", "Pricing", "Blog"];
 const settings = ["Profile", "Account", "Dashboard", "Logout"];
@@ -38,7 +39,8 @@ function NavBar() {
     setAnchorElNav(null);
   };
 
-  const handleCloseUserMenu = () => {
+  const handleCloseUserMenu = async () => {
+    await signOut();
     setAnchorElUser(null);
   };
 

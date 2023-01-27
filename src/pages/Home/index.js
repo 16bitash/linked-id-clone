@@ -5,7 +5,7 @@ import NavBar from "../../shared/components/NavBar";
 import Posts from "./Posts";
 import { getPosts } from "../../services/firebase/post";
 
-function App() {
+function Home() {
   const [posts, setPosts] = useState([]);
 
   const fetchPosts = useCallback(async () => {
@@ -28,4 +28,4 @@ function App() {
   );
 }
 
-export default App;
+export default Home;
