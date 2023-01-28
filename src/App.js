@@ -1,13 +1,16 @@
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { useEffect } from "react";
+
 import SignIn from "./pages/SignIn";
 import SignUp from "./pages/SignUp";
 import User from "./pages/User";
 import Home from "./pages/Home";
 
 import "./services/firebase/initialize";
-import { useEffect } from "react";
 import { onAuthStateChanged } from "firebase/auth";
 import { auth } from "./services/firebase/initialize";
+import { logUserIn, logUserOut } from "./redux/reducer/authSlice";
 
 const router = createBrowserRouter([
   {
@@ -29,18 +32,24 @@ const router = createBrowserRouter([
 ]);
 
 const App = () => {
+  const dispatch = useDispatch();
+  const authState = useSelector((state) => state.auth);
+  console.log(authState);
+
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (user) => {
+    const handleAuthChange = (user) => {
       if (user) {
-        console.log("User is signed in");
+        dispatch(logUserIn({ email: user.email, userId: user.uid }));
         return;
       }
 
-      console.log("User is signed out");
-    });
+      dispatch(logUserOut());
+    };
+
+    const unsubscribe = onAuthStateChanged(auth, handleAuthChange);
 
     return () => unsubscribe();
-  }, []);
+  }, [dispatch]);
 
   return <RouterProvider router={router} />;
 };
