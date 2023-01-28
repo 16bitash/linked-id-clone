@@ -1,6 +1,6 @@
 import { Button, Container, Grid, TextField, Typography } from "@mui/material";
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { signUp } from "../../services/firebase/auth";
 import NavBar from "../../shared/components/NavBar";
 
@@ -13,6 +13,8 @@ const SignUp = () => {
   const [emailValue, setEmailValue] = useState("");
   const [passwordValue, setPasswordValue] = useState("");
   const [error, setError] = useState(initialError);
+
+  const navigate = useNavigate();
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -48,8 +50,7 @@ const SignUp = () => {
 
     await signUp(emailValue, passwordValue);
 
-    setEmailValue("");
-    setPasswordValue("");
+    navigate("/");
   };
 
   return (

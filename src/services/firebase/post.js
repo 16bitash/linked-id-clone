@@ -23,7 +23,6 @@ export const getPosts = async () => {
       id: doc.id,
     });
   });
-  console.log(posts);
 
   return posts;
 };
