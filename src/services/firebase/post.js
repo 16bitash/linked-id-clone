@@ -28,7 +28,7 @@ export const getPosts = async () => {
 };
 
 export const addPost = async (body) => {
-  const addedPost = await addDoc(getPostsCollection(), body);
+  const addedPost = await addDoc(getPostsCollection(), { body });
 
   return addedPost;
 };

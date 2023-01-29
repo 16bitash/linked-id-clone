@@ -15,7 +15,7 @@ const CreatePost = (props) => {
     }
 
     try {
-      await addPost({ body: postInputValue });
+      await addPost(postInputValue);
       setPostInputValue("");
       onPostCreate();
     } catch (error) {

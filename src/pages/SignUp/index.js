@@ -2,6 +2,7 @@ import { Button, Container, Grid, TextField, Typography } from "@mui/material";
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { signUp } from "../../services/firebase/auth";
+import { addUser } from "../../services/firebase/user";
 import NavBar from "../../shared/components/NavBar";
 
 const initialError = {
@@ -12,6 +13,8 @@ const initialError = {
 const SignUp = () => {
   const [emailValue, setEmailValue] = useState("");
   const [passwordValue, setPasswordValue] = useState("");
+  const [firstNameValue, setFirstNameValue] = useState("");
+  const [lastNameValue, setLastNameValue] = useState("");
   const [error, setError] = useState(initialError);
 
   const navigate = useNavigate();
@@ -48,7 +51,9 @@ const SignUp = () => {
       return;
     }
 
-    await signUp(emailValue, passwordValue);
+    const user = await signUp(emailValue, passwordValue);
+
+    await addUser(user.user.uid, firstNameValue, lastNameValue);
 
     navigate("/");
   };
@@ -61,9 +66,29 @@ const SignUp = () => {
           <Grid container flexDirection="column" spacing={2}>
             <Grid item>
               <TextField
+                label="first name"
+                variant="standard"
+                fullWidth
+                required
+                value={firstNameValue}
+                onChange={(event) => setFirstNameValue(event.target.value)}
+              />
+            </Grid>
+            <Grid item>
+              <TextField
+                label="last name"
+                variant="standard"
+                fullWidth
+                value={lastNameValue}
+                onChange={(event) => setLastNameValue(event.target.value)}
+              />
+            </Grid>
+            <Grid item>
+              <TextField
                 label="email"
                 variant="standard"
                 fullWidth
+                required
                 error={error.email !== ""}
                 helperText={error.email}
                 value={emailValue}
@@ -76,6 +101,7 @@ const SignUp = () => {
                 type="password"
                 variant="standard"
                 fullWidth
+                required
                 error={error.password !== ""}
                 helperText={error.password}
                 value={passwordValue}
