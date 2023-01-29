@@ -1,11 +1,14 @@
 import { Button, Grid, TextField } from "@mui/material";
 import { useState } from "react";
+import { useSelector } from "react-redux";
 import { addPost } from "../../services/firebase/post";
 
 const CreatePost = (props) => {
   const { onPostCreate } = props;
 
   const [postInputValue, setPostInputValue] = useState("");
+
+  const auth = useSelector((state) => state.auth);
 
   const onFormSubmit = async (event) => {
     event.preventDefault();
@@ -15,7 +18,7 @@ const CreatePost = (props) => {
     }
 
     try {
-      await addPost(postInputValue);
+      await addPost(postInputValue, auth.userId);
       setPostInputValue("");
       onPostCreate();
     } catch (error) {

@@ -13,6 +13,7 @@ const Posts = (props) => {
               key={post.id}
               id={post.id}
               body={post.body}
+              createdBy={post.createdBy}
               onDeletePost={onDeletePost}
             />
           </Grid>
