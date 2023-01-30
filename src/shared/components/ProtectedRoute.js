@@ -6,11 +6,11 @@ const ProtectedRoute = (props) => {
 
   const auth = useSelector((state) => state.auth);
 
-  if (auth.userId) {
-    return children;
+  if (!auth.userId && auth.isInitialized) {
+    return <Navigate to="/sign-in" />;
   }
 
-  return <Navigate to="/sign-in" />;
+  return children;
 };
 
 export default ProtectedRoute;

@@ -38,6 +38,10 @@ const router = createBrowserRouter([
     path: "/sign-up",
     element: <SignUp />,
   },
+  {
+    path: "*",
+    element: <div>404</div>,
+  },
 ]);
 
 const App = () => {
