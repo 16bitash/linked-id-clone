@@ -12,6 +12,7 @@ import "./services/firebase/initialize";
 import { onAuthStateChanged } from "firebase/auth";
 import { auth } from "./services/firebase/initialize";
 import { logUserIn, logUserOut } from "./redux/slices/authSlice";
+import UserInfoEdit from "./pages/User/UserInfoEdit";
 
 const router = createBrowserRouter([
   {
@@ -23,12 +24,20 @@ const router = createBrowserRouter([
     ),
   },
   {
-    path: "/user",
+    path: "/user/:userId",
     element: (
       <ProtectedRoute>
         <User />
       </ProtectedRoute>
     ),
+  },
+  {
+    path: "/user/:userId/edit",
+    element: (
+      <ProtectedRoute>
+        <UserInfoEdit />
+      </ProtectedRoute>
+    )
   },
   {
     path: "/sign-in",

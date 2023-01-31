@@ -12,6 +12,7 @@ import { DeleteOutline as DeleteOutlineIcon } from "@mui/icons-material";
 import { deletePost } from "../../services/firebase/post";
 import { getUser } from "../../services/firebase/user";
 import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 
 const Post = (props) => {
   const { body, id, createdBy, onDeletePost } = props;
@@ -42,9 +43,11 @@ const Post = (props) => {
     <div>
       <Card sx={{ minWidth: 275 }}>
         <CardContent>
-          <Typography variant="h5" component="div">
-            {postOwnerInfo.firstName}
-          </Typography>
+          <Link to={`/user/${createdBy}`}>
+            <Typography variant="h5" component="div">
+              {postOwnerInfo.firstName}
+            </Typography>
+          </Link>
 
           <Typography variant="body2">{body}</Typography>
         </CardContent>

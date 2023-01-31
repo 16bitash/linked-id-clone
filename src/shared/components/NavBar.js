@@ -20,8 +20,6 @@ import { Link } from "react-router-dom";
 import { signOut } from "../../services/firebase/auth";
 import { useSelector } from "react-redux";
 
-const pages = ["User", "Pricing", "Blog"];
-
 function NavBar() {
   const [anchorElNav, setAnchorElNav] = useState(null);
 
@@ -44,23 +42,29 @@ function NavBar() {
       <Container maxWidth="xl">
         <Toolbar disableGutters>
           <LinkedInIcon sx={{ display: { xs: "none", md: "flex" }, mr: 1 }} />
-          <Typography
-            variant="h6"
-            noWrap
-            component="a"
-            href="/"
-            sx={{
-              mr: 2,
-              display: { xs: "none", md: "flex" },
-              fontFamily: "monospace",
-              fontWeight: 700,
-              letterSpacing: ".3rem",
-              color: "inherit",
+          <Link
+            to="/"
+            style={{
               textDecoration: "none",
+              color: "white",
             }}
           >
-            LinkedIn
-          </Typography>
+            <Typography
+              variant="h6"
+              noWrap
+              component="a"
+              sx={{
+                mr: 2,
+                display: { xs: "none", md: "flex" },
+                fontFamily: "monospace",
+                fontWeight: 700,
+                color: "inherit",
+                textDecoration: "none",
+              }}
+            >
+              LinkedIn
+            </Typography>
+          </Link>
 
           <Box sx={{ flexGrow: 1, display: { xs: "flex", md: "none" } }}>
             <IconButton
@@ -91,43 +95,47 @@ function NavBar() {
                 display: { xs: "block", md: "none" },
               }}
             >
-              {pages.map((page) => (
-                <MenuItem key={page} onClick={handleCloseNavMenu}>
-                  <Typography textAlign="center">{page}</Typography>
+              <Link to="/user">
+                <MenuItem>
+                  <Typography textAlign="center">User</Typography>
                 </MenuItem>
-              ))}
+              </Link>
             </Menu>
           </Box>
           <LinkedInIcon sx={{ display: { xs: "flex", md: "none" }, mr: 1 }} />
-          <Typography
-            variant="h5"
-            noWrap
-            component="a"
-            href=""
-            sx={{
-              mr: 2,
-              display: { xs: "flex", md: "none" },
-              flexGrow: 1,
-              fontFamily: "monospace",
-              fontWeight: 700,
-              color: "inherit",
+          <Link
+            to="/"
+            style={{
               textDecoration: "none",
+              color: "white",
             }}
           >
-            LinkedIn
-          </Typography>
+            <Typography
+              variant="h5"
+              noWrap
+              component="a"
+              sx={{
+                mr: 2,
+                display: { xs: "flex", md: "none" },
+                flexGrow: 1,
+                fontFamily: "monospace",
+                fontWeight: 700,
+                color: "inherit",
+                textDecoration: "none",
+              }}
+            >
+              LinkedIn
+            </Typography>
+          </Link>
           <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
-            {pages.map((page) => (
-              <Link to="/user" style={{ textDecoration: "none" }}>
-                <Button
-                  key={page}
-                  onClick={handleCloseNavMenu}
-                  sx={{ my: 2, color: "white", display: "block" }}
-                >
-                  {page}
-                </Button>
-              </Link>
-            ))}
+            <Link to="/user" style={{ textDecoration: "none" }}>
+              <Button
+                onClick={handleCloseNavMenu}
+                sx={{ my: 2, color: "white", display: "block" }}
+              >
+                User
+              </Button>
+            </Link>
           </Box>
 
           {auth.userId && (
