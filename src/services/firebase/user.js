@@ -8,7 +8,18 @@ export const getUser = async (userId) => {
   return { id: user.id, ...user.data() };
 };
 
-export const addUser = async (userId, firstName, lastName) => {
+export const addUser = async (
+  userId,
+  { firstName = "", lastName = "", experiences = [] }
+) => {
   const docRef = doc(db, usersCollectionName, userId);
-  await setDoc(docRef, { firstName, lastName });
+  await setDoc(docRef, { firstName, lastName, experiences });
+};
+
+export const updateUser = async (
+  userId,
+  { firstName, lastName, experiences }
+) => {
+  const docRef = doc(db, usersCollectionName, userId);
+  await setDoc(docRef, { firstName, lastName, experiences });
 };

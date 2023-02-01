@@ -1,102 +1,192 @@
-import { Button, Grid, TextField, Typography } from "@mui/material";
-import { useEffect, useState } from "react";
+import { Button, Grid, TextField, Tooltip, Typography } from "@mui/material";
+import { useCallback, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { getUser } from "../../services/firebase/user";
+import { getUser, updateUser } from "../../services/firebase/user";
+
+import { DeleteOutline as DeleteOutlineIcon } from "@mui/icons-material";
+import NavBar from "../../shared/components/NavBar";
+import { uploadImage } from "../../services/firebase/user-image";
 
 const createEmptyExperience = () => {
   return {
     companyName: "",
     startDate: "",
     endDate: "",
+    id: Math.random(),
   };
 };
 
 const UserInfoEdit = () => {
-  const [user, setUser] = useState({ firstName: "", lastName: "" });
-
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
-  const [experience, setExperience] = useState([createEmptyExperience()]);
+  const [experiences, setExperiences] = useState([]);
+  const [userImage, setUserImage] = useState(null);
 
   const { userId } = useParams();
 
-  useEffect(() => {
-    const fetchUser = async () => {
-      const user = await getUser(userId);
-      setUser(user);
-      setFirstName(user.firstName);
-    };
-
-    fetchUser();
+  const fetchUser = useCallback(async () => {
+    const user = await getUser(userId);
+    setFirstName(user.firstName);
+    setLastName(user.lastName);
+    setExperiences(
+      user.experiences.map((exp) => ({ ...exp, id: Math.random() }))
+    );
   }, [userId]);
 
-  const handleSubmit = (event) => {
+  useEffect(() => {
+    fetchUser();
+  }, [fetchUser]);
+
+  const handleSubmit = async (event) => {
     event.preventDefault();
 
-    console.log("Heyy");
+    const promiseArray = [
+      updateUser(userId, { firstName, lastName, experiences }),
+      uploadImage(userImage, userId),
+    ];
+
+    await Promise.all(promiseArray);
+
+    fetchUser();
   };
 
-  const handleCompanyNameChange = () => {};
-  const handleFirstNameChange = () => {};
-  const handleLastNameChange = () => {};
+  const handleCompanyNameChange = (index, value) => {
+    setExperiences((prevState) => {
+      return prevState.map((exp, i) => {
+        if (i === index) {
+          return {
+            ...exp,
+            companyName: value,
+          };
+        }
+
+        return exp;
+      });
+    });
+  };
+
+  const handleFirstNameChange = (index, value) => {
+    setExperiences((prevState) => {
+      return prevState.map((exp, i) => {
+        if (i === index) {
+          return {
+            ...exp,
+            startDate: value,
+          };
+        }
+
+        return exp;
+      });
+    });
+  };
+
+  const handleLastNameChange = (index, value) => {
+    setExperiences((prevState) => {
+      return prevState.map((exp, i) => {
+        if (i === index) {
+          return {
+            ...exp,
+            endDate: value,
+          };
+        }
+
+        return exp;
+      });
+    });
+  };
 
   const handleAddMoreExpClick = () => {
-    setExperience([...experience, createEmptyExperience()]);
+    setExperiences([...experiences, createEmptyExperience()]);
+  };
+
+  const handleDeleteClick = (index) => {
+    setExperiences((prevState) => {
+      return prevState.filter((exp, i) => i !== index);
+    });
+  };
+
+  const onFileChange = async (event) => {
+    setUserImage(event.target.files[0]);
   };
 
   return (
-    <form onSubmit={handleSubmit}>
-      <Grid
-        container
-        flexDirection="column"
-        sx={{
-          mt: 4,
-        }}
-      >
-        <Grid item>
-          <TextField
-            label="first name"
-            value={firstName}
-            onChange={(event) => setFirstName(event.target.value)}
-          />
-        </Grid>
-        <Grid item>
-          <TextField
-            label="last name"
-            value={lastName}
-            onChange={(event) => setLastName(event.target.value)}
-          />
-        </Grid>
-        <Grid item>
-          <Typography>Experience:</Typography>
-        </Grid>
-        {experience.map((exp) => (
+    <>
+      <NavBar />
+      <form onSubmit={handleSubmit}>
+        <Grid
+          container
+          flexDirection="column"
+          sx={{
+            mt: 4,
+          }}
+        >
           <Grid item>
             <TextField
-              label="company name"
-              value={exp.companyName}
-              onChange={handleCompanyNameChange}
-            />
-            <TextField
-              label="start date"
-              value={exp.startDate}
-              onChange={handleFirstNameChange}
-            />
-            <TextField
-              label="end date"
-              value={exp.endDate}
-              onChange={handleLastNameChange}
+              label="first name"
+              value={firstName}
+              required
+              onChange={(event) => setFirstName(event.target.value)}
             />
           </Grid>
-        ))}
-        <Button variant="outlined" onClick={handleAddMoreExpClick}>
-          Add more experience
-        </Button>
-        <Button variant="contained" type="submit">
-          Submit
-        </Button>
-      </Grid>
-    </form>
+          <Grid item>
+            <TextField
+              label="last name"
+              value={lastName}
+              onChange={(event) => setLastName(event.target.value)}
+            />
+          </Grid>
+          <Grid item>
+            <Typography>Experience:</Typography>
+          </Grid>
+          {experiences.map((exp, index) => (
+            <Grid item key={exp.id}>
+              <TextField
+                label="company name"
+                value={exp.companyName}
+                required
+                onChange={(event) =>
+                  handleCompanyNameChange(index, event.target.value)
+                }
+              />
+              <TextField
+                label="start date"
+                value={exp.startDate}
+                required
+                onChange={(event) =>
+                  handleFirstNameChange(index, event.target.value)
+                }
+              />
+              <TextField
+                label="end date"
+                value={exp.endDate}
+                required
+                onChange={(event) =>
+                  handleLastNameChange(index, event.target.value)
+                }
+              />
+              <Tooltip title="Delete">
+                <Button
+                  size="small"
+                  color="error"
+                  onClick={() => handleDeleteClick(index)}
+                >
+                  <DeleteOutlineIcon />
+                </Button>
+              </Tooltip>
+            </Grid>
+          ))}
+          <Grid item>
+            <TextField type="file" onChange={onFileChange} />
+          </Grid>
+          <Button variant="outlined" onClick={handleAddMoreExpClick}>
+            Add more experience
+          </Button>
+          <Button variant="contained" type="submit">
+            Submit
+          </Button>
+        </Grid>
+      </form>
+    </>
   );
 };
 
