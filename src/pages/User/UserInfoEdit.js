@@ -1,6 +1,6 @@
 import { Button, Grid, TextField, Tooltip, Typography } from "@mui/material";
-import { useCallback, useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useCallback, useEffect, useRef, useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
 import { getUser, updateUser } from "../../services/firebase/user";
 
 import { DeleteOutline as DeleteOutlineIcon } from "@mui/icons-material";
@@ -20,7 +20,9 @@ const UserInfoEdit = () => {
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [experiences, setExperiences] = useState([]);
-  const [userImage, setUserImage] = useState(null);
+  const userImageRef = useRef(null);
+
+  const navigate = useNavigate();
 
   const { userId } = useParams();
 
@@ -42,12 +44,15 @@ const UserInfoEdit = () => {
 
     const promiseArray = [
       updateUser(userId, { firstName, lastName, experiences }),
-      uploadImage(userImage, userId),
     ];
+
+    if (userImageRef.current) {
+      promiseArray.push(uploadImage(userImageRef.current, userId));
+    }
 
     await Promise.all(promiseArray);
 
-    fetchUser();
+    navigate(-1);
   };
 
   const handleCompanyNameChange = (index, value) => {
@@ -106,7 +111,7 @@ const UserInfoEdit = () => {
   };
 
   const onFileChange = async (event) => {
-    setUserImage(event.target.files[0]);
+    userImageRef.current = event.target.files[0];
   };
 
   return (
@@ -119,6 +124,8 @@ const UserInfoEdit = () => {
           sx={{
             mt: 4,
           }}
+          alignItems="center"
+          spacing={2}
         >
           <Grid item>
             <TextField
@@ -139,51 +146,71 @@ const UserInfoEdit = () => {
             <Typography>Experience:</Typography>
           </Grid>
           {experiences.map((exp, index) => (
-            <Grid item key={exp.id}>
-              <TextField
-                label="company name"
-                value={exp.companyName}
-                required
-                onChange={(event) =>
-                  handleCompanyNameChange(index, event.target.value)
-                }
-              />
-              <TextField
-                label="start date"
-                value={exp.startDate}
-                required
-                onChange={(event) =>
-                  handleFirstNameChange(index, event.target.value)
-                }
-              />
-              <TextField
-                label="end date"
-                value={exp.endDate}
-                required
-                onChange={(event) =>
-                  handleLastNameChange(index, event.target.value)
-                }
-              />
-              <Tooltip title="Delete">
-                <Button
-                  size="small"
-                  color="error"
-                  onClick={() => handleDeleteClick(index)}
-                >
-                  <DeleteOutlineIcon />
-                </Button>
-              </Tooltip>
+            <Grid item key={exp.id} sx={{ my: 1 }}>
+              <Grid
+                container
+                alignItems="center"
+                flexDirection="column"
+                spacing={1}
+              >
+                <Typography>Company {index + 1}</Typography>
+                <Grid item>
+                  <TextField
+                    label="company name"
+                    value={exp.companyName}
+                    required
+                    onChange={(event) =>
+                      handleCompanyNameChange(index, event.target.value)
+                    }
+                  />
+                </Grid>
+                <Grid item>
+                  <TextField
+                    label="start date"
+                    value={exp.startDate}
+                    required
+                    onChange={(event) =>
+                      handleFirstNameChange(index, event.target.value)
+                    }
+                  />
+                </Grid>
+                <Grid item>
+                  <TextField
+                    label="end date"
+                    value={exp.endDate}
+                    required
+                    onChange={(event) =>
+                      handleLastNameChange(index, event.target.value)
+                    }
+                  />
+                </Grid>
+                <Grid item>
+                  <Tooltip title="Delete">
+                    <Button
+                      size="small"
+                      color="error"
+                      onClick={() => handleDeleteClick(index)}
+                    >
+                      <DeleteOutlineIcon />
+                    </Button>
+                  </Tooltip>
+                </Grid>
+              </Grid>
             </Grid>
           ))}
           <Grid item>
+            <Button variant="outlined" onClick={handleAddMoreExpClick}>
+              Add more experience
+            </Button>
+          </Grid>
+          <Grid item>
             <TextField type="file" onChange={onFileChange} />
           </Grid>
-          <Button variant="outlined" onClick={handleAddMoreExpClick}>
-            Add more experience
-          </Button>
-          <Button variant="contained" type="submit">
-            Submit
-          </Button>
+          <Grid item>
+            <Button variant="contained" type="submit">
+              Submit
+            </Button>
+          </Grid>
         </Grid>
       </form>
     </>
