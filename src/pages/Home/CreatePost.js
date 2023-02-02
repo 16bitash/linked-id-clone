@@ -1,14 +1,14 @@
 import { Button, Grid, TextField } from "@mui/material";
 import { useState } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { createPostAsync } from "../../redux/slices/postSlice";
 import { addPost } from "../../services/firebase/post";
 
 const CreatePost = (props) => {
-  const { onPostCreate } = props;
-
   const [postInputValue, setPostInputValue] = useState("");
 
   const auth = useSelector((state) => state.auth);
+  const dispatch = useDispatch();
 
   const onFormSubmit = async (event) => {
     event.preventDefault();
@@ -17,13 +17,9 @@ const CreatePost = (props) => {
       return;
     }
 
-    try {
-      await addPost(postInputValue, auth.userId);
-      setPostInputValue("");
-      onPostCreate();
-    } catch (error) {
-      console.error("Error adding document: ", error);
-    }
+    dispatch(createPostAsync(postInputValue, auth.userId));
+
+    setPostInputValue("");
   };
 
   return (

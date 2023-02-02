@@ -7,15 +7,15 @@ import {
   Typography,
 } from "@mui/material";
 
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { DeleteOutline as DeleteOutlineIcon } from "@mui/icons-material";
-import { deletePost } from "../../services/firebase/post";
 import { getUser } from "../../services/firebase/user";
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import { deletePostAsync } from "../../redux/slices/postSlice";
 
 const Post = (props) => {
-  const { body, id, createdBy, onDeletePost } = props;
+  const { body, id, createdBy } = props;
 
   const [postOwnerInfo, setPostOwnerInfo] = useState({
     firstName: "",
@@ -24,6 +24,7 @@ const Post = (props) => {
   });
 
   const auth = useSelector((state) => state.auth);
+  const dispatch = useDispatch();
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -35,8 +36,7 @@ const Post = (props) => {
   }, [createdBy]);
 
   const handleDeleteClick = async () => {
-    await deletePost(id);
-    onDeletePost();
+    dispatch(deletePostAsync(id));
   };
 
   return (

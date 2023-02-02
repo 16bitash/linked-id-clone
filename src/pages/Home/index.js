@@ -1,28 +1,25 @@
 import { Container } from "@mui/material";
-import { useCallback, useEffect, useState } from "react";
+import { useEffect } from "react";
+import { useDispatch } from "react-redux";
+
 import CreatePost from "./CreatePost";
 import NavBar from "../../shared/components/NavBar";
 import Posts from "./Posts";
-import { getPosts } from "../../services/firebase/post";
+import { fetchPostsAsync } from "../../redux/slices/postSlice";
 
 function Home() {
-  const [posts, setPosts] = useState([]);
-
-  const fetchPosts = useCallback(async () => {
-    const fetchedPosts = await getPosts();
-    setPosts(fetchedPosts);
-  }, [setPosts]);
+  const dispatch = useDispatch();
 
   useEffect(() => {
-    fetchPosts();
-  }, [fetchPosts]);
+    dispatch(fetchPostsAsync);
+  }, [dispatch]);
 
   return (
     <>
       <NavBar />
       <Container>
-        <CreatePost onPostCreate={fetchPosts} />
-        <Posts posts={posts} onDeletePost={fetchPosts} />
+        <CreatePost />
+        <Posts />
       </Container>
     </>
   );
