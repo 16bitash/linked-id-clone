@@ -1,9 +1,9 @@
 import { Grid } from "@mui/material";
-import { useSelector } from "react-redux";
+import { usePosts } from "./hooks";
 import Post from "./Post";
 
-const Posts = (props) => {
-  const posts = useSelector((state) => state.posts.posts);
+const Posts = () => {
+  const posts = usePosts();
 
   return (
     <Grid container spacing={2} justifyContent="center" sx={{ mt: 1 }}>

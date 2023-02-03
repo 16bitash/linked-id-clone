@@ -2,7 +2,6 @@ import { Button, Grid, TextField } from "@mui/material";
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { createPostAsync } from "../../redux/slices/postSlice";
-import { addPost } from "../../services/firebase/post";
 
 const CreatePost = (props) => {
   const [postInputValue, setPostInputValue] = useState("");
