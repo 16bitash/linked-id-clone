@@ -1,8 +1,10 @@
 import { Button, Container, Grid, TextField, Typography } from "@mui/material";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 import { signIn } from "../../services/firebase/auth";
 import NavBar from "../../shared/components/NavBar";
+import useRedirectToHomeIfLoggedIn from "../../shared/hooks/useRedirectToHomeIfLoggedIn";
 
 const initialError = {
   email: "",
@@ -15,6 +17,8 @@ const SignIn = () => {
   const [error, setError] = useState(initialError);
 
   const navigate = useNavigate();
+
+  useRedirectToHomeIfLoggedIn();
 
   const handleSubmit = async (event) => {
     event.preventDefault();

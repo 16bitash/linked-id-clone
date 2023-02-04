@@ -4,6 +4,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { signUp } from "../../services/firebase/auth";
 import { addUser } from "../../services/firebase/user";
 import NavBar from "../../shared/components/NavBar";
+import useRedirectToHomeIfLoggedIn from "../../shared/hooks/useRedirectToHomeIfLoggedIn";
 
 const initialError = {
   email: "",
@@ -18,6 +19,8 @@ const SignUp = () => {
   const [error, setError] = useState(initialError);
 
   const navigate = useNavigate();
+
+  useRedirectToHomeIfLoggedIn();
 
   const handleSubmit = async (event) => {
     event.preventDefault();

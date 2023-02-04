@@ -6,7 +6,9 @@ const ProtectedRoute = (props) => {
 
   const auth = useSelector((state) => state.auth);
 
-  if (!auth.userId && auth.isInitialized) {
+  const isLoggedOut = !auth.userId && auth.isInitialized;
+
+  if (isLoggedOut) {
     return <Navigate to="/sign-in" />;
   }
 
