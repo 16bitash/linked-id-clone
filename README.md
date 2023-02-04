@@ -4,7 +4,13 @@ This project was bootstrapped with [Create React App](https://github.com/faceboo
 
 ## Installation
 
-- Run `npm install` to install all the dependencies.
+- Run `npm install` to install all the dependencies
+
+- Create a firebase project and add the following firebase services:
+
+  - Authentication
+  - Firestore
+  - Storage
 
 - Create a `.env` file in the root directory and add the following environment variables:
 
