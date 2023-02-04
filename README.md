@@ -2,6 +2,22 @@
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
+## Installation
+
+- Run `npm install` to install all the dependencies.
+
+- Create a `.env` file in the root directory and add the following environment variables:
+
+```bash
+REACT_APP_FIREBASE_API_KEY=#Enter your firebase api key
+REACT_APP_FIREBASE_AUTH_DOMAIN=#Enter your firebase auth domain
+REACT_APP_FIREBASE_PROJECT_ID=#Enter your firebase project id
+REACT_APP_FIREBASE_STORAGE_BUCKET=#Enter your firebase storage bucket
+REACT_APP_FIREBASE_MESSAGING_SENDER_ID=#Enter your firebase messaging sender id
+REACT_APP_FIREBASE_APP_ID=#Enter your firebase app id
+REACT_APP_FIREBASE_MEASUREMENT_ID=#Enter your firebase measurement id
+```
+
 ## Available Scripts
 
 In the project directory, you can run:
